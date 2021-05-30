@@ -204,8 +204,14 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const min = Math.min(a, b);
+  const max = Math.max(a, b);
+
+  const start = (isTrue) => ((isTrue) ? '[' : '(');
+  const end = (isTrue) => ((isTrue) ? ']' : ')');
+
+  return `${start(isStartIncluded) + min}, ${max + end(isEndIncluded)}`;
 }
 
 
@@ -281,8 +287,12 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const result = String(num).split('').reduce((prev, current) => +prev + +current);
+  if (String(result).length > 1) {
+    return getDigitalRoot(result);
+  }
+  return result;
 }
 
 
@@ -307,8 +317,19 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const bracketsPairs = ['[]', '{}', '<>', '()'];
+  let length = 0;
+  let processed = str;
+
+  const remove = (pair) => { processed = processed.replace(pair, ''); };
+
+  while (length !== processed.length) {
+    length = processed.length;
+    bracketsPairs.forEach((pair) => remove(pair));
+  }
+
+  return processed.length === 0;
 }
 
 
@@ -332,8 +353,16 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  let initial = num;
+  let processed = '';
+
+  while (initial > 0) {
+    processed = (initial % String(n)) + processed;
+    initial = Math.floor(initial / n);
+  }
+
+  return processed;
 }
 
 
@@ -372,8 +401,20 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  m1.forEach((row, r) => {
+    const pre = [];
+    m2[0].forEach((m2Column, c2) => {
+      let product = 0;
+      m1[r].forEach((m1Column, c1) => {
+        product += m1[r][c1] * m2[c1][c2];
+      });
+      pre.push(product);
+    });
+    result.push(pre);
+  });
+  return result;
 }
 
 
